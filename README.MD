@@ -1,7 +1,7 @@
 
 # Options Contract
 
-Options Contract v2 is a permissionless options pool protocal stack.
+Options Contract v1 is a permissionless options pool protocal stack.
 
 ## Environment
 
@@ -28,7 +28,7 @@ A smart-contract which distribute some mine coins buy FPTCoin balance.
 
 The CollateralPool is collateral pool contract whcich stores users' deposit collateral coin and necessary storage data.
 
-### OptionsManagerV2
+### OptionsManagerV1
 
 The OptionsManager is a manager contract for Options tokens. It can 
 -  buy, sell or exercise options token.
