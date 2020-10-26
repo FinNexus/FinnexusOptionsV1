@@ -41,11 +41,10 @@ contract ManagerData is ReentrancyGuard,ImputRange,AddressWhiteList,Allowances,I
     /**
      * @dev Emitted when `from` buy `optionAmount` option and create new option.
      * @param from user's account
-     * @param optionId new option's id
      * @param optionPrice option's paid price
      * @param optionAmount mint option token amount.
      */  
-    event BuyOption(address indexed from,uint256 indexed optionId,uint256 optionPrice,uint256 settlementAmount,uint256 optionAmount);
+    event BuyOption(address indexed from,uint256 optionPrice,uint256 settlementAmount,uint256 optionAmount);
     /**
      * @dev Emitted when `from` sell `amount` option whose id is `optionId` and received sellValue,priced in usd.
      */  
@@ -54,4 +53,5 @@ contract ManagerData is ReentrancyGuard,ImputRange,AddressWhiteList,Allowances,I
      * @dev Emitted when `from` exercise `amount` option whose id is `optionId` and received sellValue,priced in usd.
      */  
     event ExerciseOption(address indexed from,uint256 indexed optionId,uint256 amount,uint256 sellValue);
+    event DebugEvent(uint256 id,uint256 value1);
 }

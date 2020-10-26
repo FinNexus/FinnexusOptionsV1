@@ -10,6 +10,14 @@ import "./ManagerData.sol";
 contract CollateralCal is ManagerData {
     using SafeMath for uint256;
     using SafeInt256 for int256;
+        /**
+     * @dev  The foundation owner want to set the minimum collateral occupation rate.
+     * @param colRate The thousandths of the minimum collateral occupation rate.
+     */
+    function setCollateralRate(uint256 colRate) public onlyOwner {
+        collateralRate = colRate;
+
+    }
     /**
      * @dev Retrieve user's current total worth, priced in USD.
      * @param account input retrieve account
@@ -52,8 +60,8 @@ contract CollateralCal is ManagerData {
      * if this coin is unsufficient, he will get others collateral which in whitelist.
      * @param tokenAmount the amount of FPTCoin want to redeem.
      */
-    function redeemCollateral(uint256 tokenAmount,address collateral) nonReentrant notHalted InRange(tokenAmount) public {
-        require(checkAddressPermission(collateral,allowRedeemCollateral) , "settlement is unsupported token");
+    function redeemCollateral(uint256 tokenAmount) nonReentrant notHalted InRange(tokenAmount) public {
+        //require(checkAddressPermission(collateral,allowRedeemCollateral) , "settlement is unsupported token");
         uint256 lockedAmount = _FPTCoin.lockedBalanceOf(msg.sender);
         require(_FPTCoin.balanceOf(msg.sender)+lockedAmount>=tokenAmount,"SCoin balance is insufficient!");
         uint256 leftCollateral = getLeftCollateral();

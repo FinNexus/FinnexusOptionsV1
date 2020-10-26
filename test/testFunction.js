@@ -12,7 +12,7 @@ let OptionsProxy = artifacts.require("OptionsProxy");
 let FNXMinePool = artifacts.require("FNXMinePool");
 let MinePoolProxy = artifacts.require("MinePoolProxy");
 
-const OptionsManagerV2 = artifacts.require("OptionsManagerV2");
+const OptionsManagerV1 = artifacts.require("OptionsManagerV1");
 const ManagerProxy = artifacts.require("ManagerProxy");
 
 let FPTCoin = artifacts.require("FPTCoin");
@@ -24,23 +24,23 @@ const FNXOracle = artifacts.require("TestFNXOracle");
 const OptionsPrice = artifacts.require("OptionsPrice");
 
 let collateral0 = "0x0000000000000000000000000000000000000000";
-exports.migration =  async function (accounts){
+exports.migration =  async function (accounts,collateralAddr){
     let ivInstance = await ImpliedVolatility.new();
     let oracleInstance = await FNXOracle.new();
     let price = await OptionsPrice.new(ivInstance.address);
-    let pool = await OptionsPool.new(oracleInstance.address,price.address,ivInstance.address);
-    let options = await OptionsProxy.new(pool.address,oracleInstance.address,price.address,ivInstance.address);
+    let pool = await OptionsPool.new(collateralAddr,oracleInstance.address,price.address,ivInstance.address);
+    let options = await OptionsProxy.new(pool.address,collateralAddr,oracleInstance.address,price.address,ivInstance.address);
     pool = await FNXMinePool.new();
     let poolProxy = await MinePoolProxy.new(pool.address);
     let fptimpl = await FPTCoin.new(poolProxy.address);
     let fpt = await FPTProxy.new(fptimpl.address,poolProxy.address);
 
-    let collateral = await CollateralPool.new(options.address);
-    let poolInstance = await CollateralProxy.new(collateral.address,options.address);
+    let collateral = await CollateralPool.new(collateralAddr,options.address);
+    let poolInstance = await CollateralProxy.new(collateral.address,collateralAddr,options.address);
 
-    let managerV2 = await OptionsManagerV2.new(oracleInstance.address,price.address,
+    let managerV1 = await OptionsManagerV1.new(collateralAddr,oracleInstance.address,price.address,
         options.address,poolInstance.address,fpt.address);
-    let manager = await ManagerProxy.new(managerV2.address,oracleInstance.address,price.address,
+    let manager = await ManagerProxy.new(managerV1.address,collateralAddr,oracleInstance.address,price.address,
         options.address,poolInstance.address,fpt.address)
     await manager.setValid(false);
     await poolProxy.setManager(fpt.address);
@@ -65,24 +65,20 @@ exports.migration =  async function (accounts){
         manager : manager
     }
 }
-exports.createAndAddErc20 =  async function (contracts){
+exports.createAndAddErc20 =  async function (){
     let fnx = await FNXCoin.new();
     let erc20 = await Erc20Proxy.new(fnx.address);
-    await contracts.mine.setMineCoinInfo(erc20.address,500000000000000,2);
-    await contracts.mine.setBuyingMineInfo(erc20.address,300000000);
-    await contracts.manager.setCollateralRate(erc20.address,5000);
-    contracts.FNX = erc20;
+    return erc20;
 }
 exports.createAndAddUSDC =  async function (contracts){
     let usdc = await USDCoin.new();
     let erc20 = await Erc20Proxy.new(usdc.address);
-//    await contracts.mine.setMineCoinInfo(erc20.address,500000000000000,2);
-//    await contracts.mine.setBuyingMineInfo(erc20.address,300000000);
-    await contracts.manager.setCollateralRate(erc20.address,1200);
-    contracts.USDC = erc20;
+    return erc20;
 }
+/*
 exports.AddCollateral0 =  async function (contracts){
     await contracts.mine.setMineCoinInfo(collateral0,500000000000,2);
     await contracts.mine.setBuyingMineInfo(collateral0,300000000);
     await contracts.manager.setCollateralRate(collateral0,3000);
 }
+*/

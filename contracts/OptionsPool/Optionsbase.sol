@@ -139,10 +139,11 @@ contract OptionsBase is OptionsData {
     function _createOptions(address from,uint256 type_ly_expiration,
         uint128 strikePrice,uint128 underlyingPrice,uint128 amount,uint128 settlePrice) internal returns(uint256){
         uint64 expiration = uint64(type_ly_expiration>>128);
+        require(underlyingAssets.isEligibleUint32(uint32(type_ly_expiration>>64)) , "underlying is unsupported asset");
+        require(expirationList.isEligibleUint32(uint32(expiration)),"expiration value is not supported");
         uint256 iv = _volatility.calculateIv(uint32(type_ly_expiration>>64),uint8(type_ly_expiration),expiration,
-            underlyingPrice,strikePrice);
+            underlyingPrice,strikePrice); 
         uint256 optPrice = _optionsPrice.getOptionsPrice_iv(underlyingPrice,strikePrice,expiration,iv,uint8(type_ly_expiration));
-        
         allOptions.push(OptionsInfo(from,
             uint8(type_ly_expiration),
             uint32(type_ly_expiration>>64),

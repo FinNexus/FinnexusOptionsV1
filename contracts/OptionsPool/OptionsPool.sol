@@ -12,7 +12,8 @@ contract OptionsPool is OptionsNetWorthCal {
      * @param optionsPriceAddr options price contract address
      * @param ivAddress implied volatility contract address
      */  
-    constructor (address oracleAddr,address optionsPriceAddr,address ivAddress)public{
+    constructor (address collateraladdr,address oracleAddr,address optionsPriceAddr,address ivAddress)public{
+        collateral = collateraladdr;
         _oracle = IFNXOracle(oracleAddr);
         _optionsPrice = IOptionsPrice(optionsPriceAddr);
         _volatility = IVolatility(ivAddress);
@@ -37,10 +38,10 @@ contract OptionsPool is OptionsNetWorthCal {
      * @param amount user's input new option's amount.
      */ 
     function createOptions(address from,uint256 type_ly_expiration,
-        uint128 strikePrice,uint128 underlyingPrice,uint128 amount,uint128 settlePrice) onlyManager public{
-        _createOptions(from,type_ly_expiration,strikePrice,underlyingPrice,amount,settlePrice);
+        uint128 strikePrice,uint128 underlyingPrice,uint128 amount,uint128 settlePrice) onlyManager public returns(uint256){
+        uint256 price = _createOptions(from,type_ly_expiration,strikePrice,underlyingPrice,amount,settlePrice);
         _addOptionsCollateral(allOptions.length);
-//        return price;
+        return price;
 //        _addNewOptionsNetworth(info);
     }
     /**

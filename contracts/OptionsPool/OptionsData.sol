@@ -17,10 +17,10 @@ contract OptionsData is UnderlyingAssets,timeLimitation,ImputRange,Managerable,I
 
         uint64		expiration; // Expiration timestamp//64+32+160 expiration + underlyingPrice rate + settlement
         uint64     iv;
-        uint128     amount;         // amount(<<128)	fullPrice(<<64)	ivNumerator
+        uint128     amount; 
 
-        uint128     strikePrice;    //timePrice(<<128)    strike price		
-        uint128     underlyingPrice;    //timePrice(<<128)    strike price		
+        uint128     strikePrice;    //  strike price		
+        uint128     underlyingPrice;    //underlying Price	
 
         uint128     optionsPrice;
         uint128     settlePrice;
@@ -62,7 +62,7 @@ contract OptionsData is UnderlyingAssets,timeLimitation,ImputRange,Managerable,I
      * @dev Emitted when `owner` burn `amount` his option which id is `optionID`. 
      */    
     event BurnOption(address indexed owner,uint256 indexed optionID,uint amount);
-    event DebugEvent(uint256 id,uint256 value1,uint256 value2);
+    event DebugEvent(uint256 id,uint256 value1);
 }
 /*
 contract OptionsDataV2 is OptionsData{

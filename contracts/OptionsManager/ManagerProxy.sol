@@ -13,9 +13,10 @@ contract ManagerProxy is ManagerData,baseProxy{
     *  optionsPoolAddr optoins pool contract address
     *  FPTCoinAddr FPTCoin contract address
     */
-    constructor(address implementation_,address oracleAddr,address optionsPriceAddr,
+    constructor(address implementation_,address collateraladdr,address oracleAddr,address optionsPriceAddr,
             address optionsPoolAddr,address collateralPoolAddr,address FPTCoinAddr)
-         baseProxy(implementation_) public  {
+        baseProxy(implementation_) public  {
+        collateral = collateraladdr;
         _oracle = IFNXOracle(oracleAddr);
         _optionsPrice = IOptionsPrice(optionsPriceAddr);
         _optionsPool = IOptionsPool(optionsPoolAddr);
@@ -96,7 +97,7 @@ contract ManagerProxy is ManagerData,baseProxy{
      *  collateral collateral coin address
      *  colRate The thousandths of the minimum collateral occupation rate.
      */
-    function setCollateralRate(address /*collateral*/,uint256 /*colRate*/) public {
+    function setCollateralRate(uint256 /*colRate*/) public {
         delegateAndReturn();
     }
     /**
@@ -139,7 +140,7 @@ contract ManagerProxy is ManagerData,baseProxy{
      *  collateral The collateral coin address which is in whitelist.
      *  amount the amount of collateral to deposit.
      */
-    function addCollateral(address /*collateral*/,uint256 /*amount*/) public payable {
+    function addCollateral(uint256 /*amount*/) public payable {
         delegateAndReturn();
     }
     /**
@@ -148,7 +149,7 @@ contract ManagerProxy is ManagerData,baseProxy{
      *  tokenAmount the amount of FPTCoin want to redeem.
      *  collateral The prioritized collateral coin address.
      */
-    function redeemCollateral(uint256 /*tokenAmount*/,address /*collateral*/) public {
+    function redeemCollateral(uint256 /*tokenAmount*/) public {
         delegateAndReturn();
     }
     /**
@@ -238,8 +239,8 @@ contract ManagerProxy is ManagerData,baseProxy{
     *  amount user input amount of new option user want to buy.
     *  optType user input option type
     */ 
-    function buyOption(address /*settlement*/,uint256 /*settlementAmount*/, uint256 /*strikePrice*/,uint32 /*underlying*/,
-                uint256 /*expiration*/,uint256 /*amount*/,uint8 /*optType*/) public payable{
+    function buyOption(uint256 /*settlementAmount*/, uint256 /*strikePrice*/,uint32 /*underlying*/,
+                uint32 /*expiration*/,uint256 /*amount*/,uint8 /*optType*/) public payable{
         delegateAndReturn();
     }
     /**

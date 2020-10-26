@@ -5,10 +5,7 @@ let collateral0 = "0x0000000000000000000000000000000000000000";
 let {migration ,createAndAddUSDC,createAndAddErc20,AddCollateral0} = require("./testFunction.js");
 contract('OptionsManagerV2', function (accounts){
     it('OptionsManagerV2 buy options gas fee by eth', async function (){
-        let contracts = await migration(accounts);
-        await AddCollateral0(contracts);
-        await createAndAddErc20(contracts);
-        await createAndAddUSDC(contracts);
+        let contracts = await migration(accounts,collateral0);
         await contracts.manager.approve(accounts[0],new BN("10000000000000000000000",10));
         await contracts.FNX.approve(contracts.manager.address,10000000000000);
         await contracts.manager.addCollateral(contracts.FNX.address,10000000000000);

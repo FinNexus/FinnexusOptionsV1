@@ -10,7 +10,8 @@ import "./TransactionFee.sol";
 contract CollateralPool is TransactionFee{
     using SafeMath for uint256;
     using SafeInt256 for int256;
-    constructor(address optionsPool)public{
+    constructor(address collateraladdr,address optionsPool)public{
+        collateral = collateraladdr;
         _optionsPool = IOptionsPool(optionsPool);
     }
     /**
@@ -20,6 +21,7 @@ contract CollateralPool is TransactionFee{
     function () external payable onlyManager{
 
     }
+
     function initialize() onlyOwner public {
         TransactionFee.initialize();
     }
@@ -168,10 +170,15 @@ contract CollateralPool is TransactionFee{
     /**
      * @dev Operation for transfer user's payback. Only manager contract can invoke this function.
      * @param recieptor the recieptor account.
-     * @param payback the payback amount
+     * @param allPay the payback amount
      */
-    function transferPayback(address payable recieptor,uint256 payback)public onlyManager{
-        _transferPayback(recieptor,payback);
+    function buyOptionsPayfor(address payable recieptor,uint256 settlementAmount,uint256 allPay)public onlyManager{
+        uint256 fee = addTransactionFee(allPay,0);
+        require(settlementAmount>=allPay+fee,"settlement asset is insufficient!");
+        settlementAmount = settlementAmount-(allPay+fee);
+        if (settlementAmount > 0){
+            _transferPayback(recieptor,settlementAmount);
+        }
     }
 
     /**

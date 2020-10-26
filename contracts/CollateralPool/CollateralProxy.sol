@@ -13,8 +13,9 @@ contract CollateralProxy is CollateralData,baseProxy{
      *  ivAddress implied volatility contract address
      */  
 
-    constructor(address implementation_,address optionsPool)
-         baseProxy(implementation_) public  {
+    constructor(address implementation_,address collateraladdr,address optionsPool)
+        baseProxy(implementation_) public  {
+        collateral = collateraladdr;
         _optionsPool = IOptionsPool(optionsPool);
     }
         /**
@@ -24,7 +25,7 @@ contract CollateralProxy is CollateralData,baseProxy{
     function () external payable onlyManager{
 
     }
-    function getFeeRate(uint256 /*feeType*/)public view returns (uint256,uint256){
+    function getFeeRate(uint256 /*feeType*/)public view returns (uint256){
         delegateToViewAndReturn();
     }
     /**
@@ -34,14 +35,11 @@ contract CollateralProxy is CollateralData,baseProxy{
      *  denominator thedenominator of transaction fee.
      * transaction fee = numerator/denominator;
      */   
-    function setTransactionFee(uint256 /*feeType*/,uint256 /*numerator*/,uint256 /*denominator*/)public{
+    function setTransactionFee(uint256 /*feeType*/,uint32 /*thousandth*/)public{
         delegateAndReturn();
     }
 
-    function getFeeBalance(address /*settlement*/)public view returns(uint256){
-        delegateToViewAndReturn();
-    }
-    function getAllFeeBalances()public view returns(address[] memory,uint256[] memory){
+    function getFeeBalance()public view returns(uint256){
         delegateToViewAndReturn();
     }
     function redeem(address /*currency*/)public{
@@ -49,9 +47,6 @@ contract CollateralProxy is CollateralData,baseProxy{
     }
     function redeemAll()public{
         delegateAndReturn();
-    }
-    function calculateFee(uint256 /*feeType*/,uint256 /*amount*/)public view returns (uint256){
-        delegateToViewAndReturn();
     }
         /**
      * @dev An interface for add transaction fee.
@@ -75,14 +70,14 @@ contract CollateralProxy is CollateralData,baseProxy{
      *  user input retrieved account 
      *  collateral input retrieved collateral coin address 
      */
-    function getUserInputCollateral(address /*user*/,address /*collateral*/)public view returns (uint256){
+    function getUserInputCollateral(address /*user*/)public view returns (uint256){
         delegateToViewAndReturn();
     }
     /**
      * @dev Retrieve collateral balance data.
      *  collateral input retrieved collateral coin address 
      */
-    function getCollateralBalance(address /*collateral*/)public view returns (uint256){
+    function getCollateralBalance()public view returns (uint256){
         delegateToViewAndReturn();
     }
     /**
@@ -201,7 +196,7 @@ contract CollateralProxy is CollateralData,baseProxy{
      *  settlement the settlement coin address.
      *  payback the payback amount
      */
-    function transferPayback(address payable /*recieptor*/,uint256 /*payback*/)public{
+    function buyOptionsPayfor(address payable /*recieptor*/,uint256 /*settlementAmount*/,uint256 /*allPay*/)public{
         delegateAndReturn();
     }
 
@@ -223,7 +218,7 @@ contract CollateralProxy is CollateralData,baseProxy{
      * @dev Calculate the collateral pool shared worth.
      * The foundation operator will invoke this function frequently
      */
-    function calSharedPayment(address[] memory /*_whiteList*/) public{
+    function calSharedPayment() public{
         delegateAndReturn();
     }
     /**

@@ -6,7 +6,7 @@ contract('ImpliedVolatility', function (accounts){
     it('ImpliedVolatility test iv', async function (){
         let volInstance = await ImpliedVolatility.new();
         for (i =5000;i<=20000;i+=100){
-            await calculateIv(volInstance,daySeconds*3,i,10000);
+            await calculateIv(volInstance,daySeconds*30,i,10000);
         }
     });
 });

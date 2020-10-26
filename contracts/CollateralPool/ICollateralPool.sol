@@ -2,9 +2,8 @@ pragma solidity =0.5.16;
 import "../modules/Ownable.sol";
 interface ICollateralPool {
     function getUserPayingUsd(address user)external view returns (uint256);
-    function getUserInputCollateral(address user,address collateral)external view returns (uint256);
-    //function getNetWorthBalance(address collateral)external view returns (int256);
-    function getCollateralBalance(address collateral)external view returns (uint256);
+    function getUserInputCollateral(address user)external view returns (uint256);
+    function getCollateralBalance()external view returns (uint256);
 
     //add
     function addUserPayingUsd(address user,uint256 amount)external;
@@ -23,7 +22,7 @@ interface ICollateralPool {
     function setCollateralBalance(uint256 amount)external;
     function transferPaybackAndFee(address recieptor,uint256 payback,uint256 feeType)external;
 
-    function transferPayback(address recieptor,uint256 payback)external;
+    function buyOptionsPayfor(address recieptor,uint256 settlementAmount,uint256 allPay)external;
     function addTransactionFee(uint256 amount,uint256 feeType)external returns (uint256);
 
     function getRealBalance()external view returns(int256);

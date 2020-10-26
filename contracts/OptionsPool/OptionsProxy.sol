@@ -13,8 +13,9 @@ contract OptionsProxy is OptionsData,baseProxy{
      *  ivAddress implied volatility contract address
      */  
 
-    constructor(address implementation_,address oracleAddr,address optionsPriceAddr,address ivAddress)
-         baseProxy(implementation_) public  {
+    constructor(address implementation_,address collateraladdr,address oracleAddr,address optionsPriceAddr,address ivAddress)
+        baseProxy(implementation_) public  {
+        collateral = collateraladdr;
         _oracle = IFNXOracle(oracleAddr);
         _optionsPrice = IOptionsPrice(optionsPriceAddr);
         _volatility = IVolatility(ivAddress);
@@ -92,27 +93,27 @@ contract OptionsProxy is OptionsData,baseProxy{
      *  expiration option's expiration
      *  underlying option's underlying
      */
-    function buyOptionCheck(uint256 /*expiration*/,uint32 /*underlying*/)public view{
+    function buyOptionCheck(uint32 /*expiration*/,uint32 /*underlying*/)public view{
         delegateToViewAndReturn();
     }
     /**
      * @dev Implementation of add an eligible expiration into the expirationList.
      *  expiration new eligible expiration.
      */
-    function addExpiration(uint256 /*expiration*/)public{
+    function addExpiration(uint32 /*expiration*/)public{
         delegateAndReturn();
     }
     /**
      * @dev Implementation of revoke an invalid expiration from the expirationList.
      *  removeExpiration revoked expiration.
      */
-    function removeExpirationList(uint256 /*removeExpiration*/)public returns(bool) {
+    function removeExpirationList(uint32 /*removeExpiration*/)public returns(bool) {
         delegateAndReturn();
     }
     /**
      * @dev Implementation of getting the eligible expirationList.
      */
-    function getExpirationList()public view returns (uint256[] memory){
+    function getExpirationList()public view returns (uint32[] memory){
         delegateToViewAndReturn();
     }
     /**
@@ -170,6 +171,9 @@ contract OptionsProxy is OptionsData,baseProxy{
     function setCollateralPhase(uint256 /*totalCallOccupied*/,uint256 /*totalPutOccupied*/,
         uint256 /*beginOption*/,int256 /*latestCallOccpied*/,int256 /*latestPutOccpied*/) public{
         delegateAndReturn();
+    }
+    function getAllOccupiedCollateral() public view returns (uint256,uint256){
+        delegateToViewAndReturn();
     }
     /**
      * @dev get call options total collateral occupied value.
@@ -238,7 +242,7 @@ contract OptionsProxy is OptionsData,baseProxy{
      * @dev retrieve all information for collateral occupied and net worth calculation.
      *  whiteList settlement address whitelist.
      */ 
-    function getOptionCalRangeAll(address[] memory /*whiteList*/)public view returns(uint256,int256,int256,uint256,int256[] memory,uint256,uint256){
+    function getOptionCalRangeAll()public view returns(uint256,int256,int256,uint256,int256,uint256,uint256){
         delegateToViewAndReturn();
     }
     /**
@@ -250,8 +254,8 @@ contract OptionsProxy is OptionsData,baseProxy{
      *  optionPrice current new option's price, calculated by options price contract.
      *  amount user's input new option's amount.
      */ 
-    function createOptions(address /*from*/,uint256 /*type_ly_exp*/,uint256 /*strikePrice*/,uint256 /*optionPrice*/,
-                uint256 /*amount*/) public {
+    function createOptions(address /*from*/,uint256 /*type_ly_exp*/,uint128 /*strikePrice*/,uint128 /*optionPrice*/,
+                uint128 /*amount*/,uint128 /*settlePrice*/) public returns(uint256){
         delegateAndReturn();
     }
     /**

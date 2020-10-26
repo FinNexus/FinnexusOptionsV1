@@ -89,7 +89,9 @@ contract OptionsOccupiedCal is OptionsBase {
         callLatestOccupied -= latestCallOccpied;
         putLatestOccupied -= latestPutOccpied;
     }
-
+    function getAllOccupiedCollateral() public view returns (uint256,uint256) {
+        return (getCallTotalOccupiedCollateral(),getPutTotalOccupiedCollateral());
+    }
     /**
      * @dev get call options total collateral occupied value.
      */ 
